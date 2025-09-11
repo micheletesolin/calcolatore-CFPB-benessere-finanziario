@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore del Benessere Finanziario CFPB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .calculator {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: slideIn 0.8s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            margin: 30px 0 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .question {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.2s ease;
+        }
+        
+        .question:hover {
+            transform: translateX(5px);
+        }
+        
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: scale(1.02);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+            accent-color: #667eea;
+        }
+        
+        .option.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .demographics {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .demo-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 20px;
+        }
+        
+        .demo-question {
+            margin-bottom: 20px;
+        }
+        
+        .demo-question label {
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .demo-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin: 40px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+        
+        .calculate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .score {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .interpretation {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        .description {
+            font-size: 1em;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+        
+        .score-details {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .reset-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            background: white;
+            color: #11998e;
+        }
+        
+        .progress {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+            
+            .demo-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🏦 Calcolatore CFPB del Benessere Finanziario</h1>
+        <p class="subtitle">
+            Versione ufficiale del Consumer Financial Protection Bureau (CFPB)<br>
+            Scala scientificamente validata con conversione accurata dei punteggi
+        </p>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <form id="wellbeingForm">
+            <div class="section-title">Parte 1: Quanto bene questa affermazione ti descrive?</div>
+            
+            <div class="question">
+                <div class="question-text">1. Potrei gestire una spesa imprevista importante</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q1" value="4"> Completamente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="3"> Molto bene
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="2"> Un po'
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="1"> Molto poco
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="0"> Per niente
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2. Sto garantendo il mio futuro finanziario</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q2" value="4"> Completamente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="3"> Molto bene
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="2"> Un po'
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="1"> Molto poco
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="0"> Per niente
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3. A causa della mia situazione finanziaria, sento che non avrò mai le cose che voglio nella vita</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q3" value="0"> Completamente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="1"> Molto bene
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="2"> Un po'
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="3"> Molto poco
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="4"> Per niente
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4. Posso godermi la vita grazie al modo in cui gestisco i miei soldi</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q4" value="4"> Completamente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="3"> Molto bene
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="2"> Un po'
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="1"> Molto poco
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="0"> Per niente
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5. Sto appena tirando avanti finanziariamente</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q5" value="0"> Completamente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="1"> Molto bene
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="2"> Un po'
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="3"> Molto poco
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="4"> Per niente
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">6. Sono preoccupato che i soldi che ho o che risparmierò non dureranno</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q6" value="0"> Completamente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="1"> Molto bene
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="2"> Un po'
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="3"> Molto poco
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="4"> Per niente
+                    </label>
+                </div>
+            </div>
+
+            <div class="section-title">Parte 2: Quanto spesso questa affermazione si applica a te?</div>
+
+            <div class="question">
+                <div class="question-text">7. Fare un regalo per un matrimonio, compleanno o altra occasione metterebbe a dura prova le mie finanze per il mese</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q7" value="0"> Sempre
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="1"> Spesso
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="2"> Qualche volta
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="3"> Raramente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="4"> Mai
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">8. Ho soldi rimasti alla fine del mese</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q8" value="4"> Sempre
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="3"> Spesso
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="2"> Qualche volta
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="1"> Raramente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="0"> Mai
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">9. Sono indietro con le mie finanze</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q9" value="0"> Sempre
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="1"> Spesso
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="2"> Qualche volta
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="3"> Raramente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="4"> Mai
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">10. Le mie finanze controllano la mia vita</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q10" value="0"> Sempre
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="1"> Spesso
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="2"> Qualche volta
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="3"> Raramente
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="4"> Mai
+                    </label>
+                </div>
+            </div>
+
+            <div class="section-title">Parte 3: Informazioni demografiche</div>
+            
+            <div class="demographics">
+                <div class="demo-title">Informazioni necessarie per il calcolo accurato del punteggio</div>
+                
+                <div class="demo-question">
+                    <label>Quanti anni hai?</label>
+                    <div class="demo-options">
+                        <label class="option">
+                            <input type="radio" name="age" value="young"> 18-61 anni
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="age" value="older"> 62+ anni
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="demo-question">
+                    <label>Come hai compilato questo questionario?</label>
+                    <div class="demo-options">
+                        <label class="option">
+                            <input type="radio" name="admin" value="self"> Ho letto le domande da solo/a
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="admin" value="assisted"> Qualcuno mi ha letto le domande
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <button type="button" class="calculate-btn" id="calculateBtn" onclick="calculateScore()">
+            📊 Calcola il Punteggio CFPB
+        </button>
+
+        <div class="result" id="result">
+            <div class="score" id="scoreDisplay"></div>
+            <div class="interpretation" id="interpretation"></div>
+            <div class="score-details" id="scoreDetails"></div>
+            <div class="description" id="description"></div>
+            <button type="button" class="reset-btn" onclick="resetForm()">🔄 Ricomincia</button>
+        </div>
+    </div>
+
+    <script>
+        // CFPB Official conversion tables
+        const conversionTable = {
+            young_self: [14,19,22,25,27,29,31,32,34,35,37,38,40,41,42,44,45,46,47,49,50,51,52,54,55,56,58,59,60,62,63,65,66,68,69,71,73,75,78,81,86],
+            young_assisted: [16,21,24,27,29,31,33,34,36,38,39,40,42,43,44,45,47,48,49,50,52,53,54,55,57,58,59,60,62,63,65,66,68,70,71,73,76,78,81,85,91],
+            older_self: [14,20,24,26,29,31,33,35,36,38,39,41,42,44,45,46,48,49,50,52,53,54,56,57,58,60,61,63,64,66,67,69,71,73,75,77,79,82,84,88,95],
+            older_assisted: [18,23,26,28,30,32,33,35,36,38,39,40,41,43,44,45,46,47,48,49,50,52,53,54,55,56,57,58,60,61,62,64,65,67,68,70,72,75,77,81,87]
+        };
+
+        // Update progress bar as user answers questions
+        function updateProgress() {
+            const totalQuestions = 12; // 10 main questions + 2 demographic
+            let answered = 0;
+            
+            // Check main questions
+            for (let i = 1; i <= 10; i++) {
+                if (document.querySelector(`input[name="q${i}"]:checked`)) {
+                    answered++;
+                }
+            }
+            
+            // Check demographic questions
+            if (document.querySelector('input[name="age"]:checked')) answered++;
+            if (document.querySelector('input[name="admin"]:checked')) answered++;
+            
+            const progress = (answered / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Enable/disable calculate button
+            const calculateBtn = document.getElementById('calculateBtn');
+            calculateBtn.disabled = answered < totalQuestions;
+        }
+
+        // Add event listeners to all radio buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateProgress();
+                    
+                    // Update visual selection
+                    const options = document.querySelectorAll(`input[name="${this.name}"]`);
+                    options.forEach(option => {
+                        option.closest('.option').classList.remove('selected');
+                    });
+                    this.closest('.option').classList.add('selected');
+                });
+            });
+        });
+
+        function calculateScore() {
+            let totalResponseValue = 0;
+            let allAnswered = true;
+
+            // Calculate total response value from questions 1-10
+            for (let i = 1; i <= 10; i++) {
+                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selectedOption) {
+                    totalResponseValue += parseInt(selectedOption.value);
+                } else {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            // Check demographic questions
+            const ageGroup = document.querySelector('input[name="age"]:checked');
+            const adminType = document.querySelector('input[name="admin"]:checked');
+
+            if (!allAnswered || !ageGroup || !adminType) {
+                alert('Per favore, rispondi a tutte le domande prima di calcolare il punteggio.');
+                return;
+            }
+
+            // Determine conversion table to use
+            let tableKey = '';
+            if (ageGroup.value === 'young' && adminType.value === 'self') {
+                tableKey = 'young_self';
+            } else if (ageGroup.value === 'young' && adminType.value === 'assisted') {
+                tableKey = 'young_assisted';
+            } else if (ageGroup.value === 'older' && adminType.value === 'self') {
+                tableKey = 'older_self';
+            } else if (ageGroup.value === 'older' && adminType.value === 'assisted') {
+                tableKey = 'older_assisted';
+            }
+
+            // Convert using official CFPB table
+            const finalScore = conversionTable[tableKey][totalResponseValue];
+
+            // Display results
+            displayResults(finalScore, totalResponseValue, ageGroup.value, adminType.value);
+        }
+
+        function displayResults(score, rawScore, ageGroup, adminType) {
+            const resultDiv = document.getElementById('result');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const interpretation = document.getElementById('interpretation');
+            const description = document.getElementById('description');
+            const scoreDetails = document.getElementById('scoreDetails');
+
+            scoreDisplay.textContent = score;
+
+            // Score details
+            const ageText = ageGroup === 'young' ? '18-61 anni' : '62+ anni';
+            const adminText = adminType === 'self' ? 'Auto-somministrato' : 'Assistito';
+            scoreDetails.innerHTML = `
+                <strong>Dettagli del calcolo:</strong><br>
+                Punteggio grezzo: ${rawScore}/40<br>
+                Età: ${ageText}<br>
+                Modalità: ${adminText}<br>
+                Punteggio finale CFPB: ${score}/100
+            `;
+
+            // Interpret the score based on CFPB research
+            let interpretationText = '';
+            let descriptionText = '';
+
+            if (score >= 70) {
+                interpretationText = '🌟 Benessere Finanziario Molto Alto';
+                descriptionText = 'Hai un eccellente controllo delle tue finanze. Sei sulla buona strada per raggiungere i tuoi obiettivi finanziari e hai la capacità di gestire emergenze finanziarie. Continua con le tue buone pratiche finanziarie!';
+                resultDiv.style.background = 'linear-gradient(135deg, #11998e, #38ef7d)';
+            } else if (score >= 60) {
+                interpretationText = '✅ Benessere Finanziario Alto';
+                descriptionText = 'Hai un buon controllo delle tue finanze e sei generalmente sulla buona strada. Potresti beneficiare di qualche miglioramento in alcune aree per aumentare ulteriormente la tua sicurezza finanziaria.';
+                resultDiv.style.background = 'linear-gradient(135deg, #74b9ff, #0984e3)';
+            } else if (score >= 50) {
+                interpretationText = '⚖️ Benessere Finanziario Moderato';
+                descriptionText = 'Le tue finanze sono in una situazione intermedia. Ci sono aree significative di miglioramento che potrebbero aumentare la tua stabilità finanziaria. Considera di lavorare su un budget più strutturato e aumentare i risparmi di emergenza.';
+                resultDiv.style.background = 'linear-gradient(135deg, #fdcb6e, #e17055)';
+            } else if (score >= 40) {
+                interpretationText = '⚠️ Benessere Finanziario Basso';
+                descriptionText = 'Le tue finanze necessitano di attenzione immediata. È importante creare un piano finanziario, ridurre le spese non essenziali e cercare modi per aumentare il reddito o ridurre i debiti. Considera di consultare un consulente finanziario.';
+                resultDiv.style.background = 'linear-gradient(135deg, #fd79a8, #fdcb6e)';
+            } else {
+                interpretationText = '🚨 Benessere Finanziario Molto Basso';
+                descriptionText = 'La tua situazione finanziaria richiede interventi urgenti. È altamente raccomandato cercare assistenza da un consulente finanziario qualificato o da servizi di counseling creditizio per sviluppare un piano di ripresa finanziaria.';
+                resultDiv.style.background = 'linear-gradient(135deg, #e17055, #d63031)';
+            }
+
+            interpretation.textContent = interpretationText;
+            description.textContent = descriptionText;
+
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('wellbeingForm').reset();
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('calculateBtn').disabled = true;
+            
+            // Remove all selected states
+            const selectedOptions = document.querySelectorAll('.option.selected');
+            selectedOptions.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Scroll back to top
+            document.querySelector('.calculator').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
