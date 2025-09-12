@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calcolatore Benessere Finanziario</title>
-  <!-- Google Fonts: Nunito & Caveat -->
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
 :root {
@@ -15,34 +14,34 @@
   --input-border: #c1d8da;
   --text-main: #193F46;
   --progress: var(--brand-primary);
-
   font-family: 'Nunito', Arial, sans-serif;
 }
 body {
   background: var(--form-bg);
   color: var(--text-main);
-  font-size: 1.11rem;
+  font-size: 1.1rem;
   margin: 0;
 }
 .container {
-  max-width: 520px;
+  max-width: 800px;
+  min-width: 340px;
   margin: 2rem auto;
-  padding: 2rem 2rem 1.5rem 2rem;
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
   background: #fff;
-  border-radius: 18px;
+  border-radius: 24px;
   box-shadow: 0 3px 20px 0 rgba(15,40,70,0.07);
 }
 h1 {
-  font-size: 2.1rem;
+  font-size: 2.35rem;
   font-weight: 700;
   color: var(--brand-primary);
-  margin-bottom: 0.2em;
+  margin-bottom: 0.15em;
 }
 h2.caveat {
   font-family: 'Caveat', cursive;
   color: var(--brand-accent);
   margin-top: 0;
-  font-size: 2.0rem;
+  font-size: 2.15rem;
   margin-bottom: 0.7em;
 }
 .step { display: none; }
@@ -51,8 +50,8 @@ button {
   background: var(--brand-primary);
   color: #fff;
   font-family: 'Nunito', Arial, sans-serif;
-  padding: 0.7em 1.2em;
-  margin: 1em 0 0 0;
+  padding: 0.75em 1.65em;
+  margin: 1.3em 0 0 0;
   font-size: 1rem;
   border-radius: 6px;
   border: none;
@@ -62,26 +61,47 @@ button {
 button.btn-next { background: var(--brand-primary);}
 button.btn-prev { background: var(--brand-accent);}
 button.btn-hubspot { background: var(--brand-accent);}
+label { display: block; margin-bottom: 2.1em; font-weight: 500;}
+.question-row {
+  display: flex; align-items:center; flex-wrap: wrap; margin-bottom: 1.6em;
+}
+.q-title {
+  min-width: 340px; font-weight: 600;
+}
+.options-inline {
+  display: flex;
+  gap: 1.3em;
+  flex-wrap: wrap;
+}
+.options-inline label {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 0;
+  font-weight: 400;
+  cursor: pointer;
+  gap: 0.28em;
+}
+.options-inline input { margin-right: 0.3em; }
 input[type="radio"], input[type="checkbox"] { margin-right: 0.7em; }
 input[type="email"], input[type="text"], select {
   font-size: 1em;
   font-family: 'Nunito', Arial, sans-serif;
   border: 1px solid var(--input-border);
-  padding: 0.5em 0.8em;
+  padding: 0.54em 0.95em;
   border-radius: 6px;
   background: var(--brand-secondary);
   margin-top: 0.3em;
   display: block;
-  width: 100%;
+  width: 350px;
+  max-width: 100%;
 }
 input:focus, select:focus { border: 1.8px solid var(--brand-primary);}
-label { display: block; margin-bottom: 1.1em; }
 #progress-bar {
   width: 100%;
   height: 7px;
   background: #f3f4f7;
   border-radius: 10px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   overflow: hidden;
   position: relative;
 }
@@ -92,19 +112,25 @@ label { display: block; margin-bottom: 1.1em; }
   transition: width .4s cubic-bezier(.5,-0.7,.2,1.5);
 }
 .thankyou {
-  margin-top: 2.2rem;
-  padding: 1.1rem 1rem !important;
+  margin-top: 2.5rem;
+  padding: 1.4rem 1rem !important;
   background: var(--brand-secondary);
-  border-radius: 12px;
+  border-radius: 14px;
   color: var(--brand-primary);
   text-align: center;
-  font-size: 1.14rem;
+  font-size: 1.19rem;
   display:none;
 }
+@media (max-width: 1150px) {
+  .container { max-width:99vw;padding: 1rem;}
+  .q-title{min-width:210px;}
+}
 @media (max-width: 650px) {
-  .container {padding: 1.1rem;}
-  h1 { font-size: 1.5rem; }
-  h2.caveat { font-size: 1.4rem;}
+  .container {padding: 0.4rem;}
+  h1 { font-size: 1.28rem; }
+  h2.caveat { font-size: 1.14rem;}
+  .q-title{min-width:80px;}
+  .question-row {flex-direction:column; align-items: flex-start;}
 }
   </style>
 </head>
@@ -112,121 +138,163 @@ label { display: block; margin-bottom: 1.1em; }
   <div class="container">
     <div id="progress-bar"></div>
     <form id="wellbeingForm" autocomplete="off">
-
-      <!-- STEP 1 -->
+      <!-- TAB 1: Intro -->
       <section class="step active" data-step="1">
         <h1>Calcolatore<span style="color:#1CAFB9;">.</span></h1>
         <h2 class="caveat">Benessere Finanziario CFPB</h2>
-        <p style="margin-bottom:2em">Rispondi alle domande: riceverai il tuo risultato via email.</p>
-        <div class="fields">
-          <label>Quanti anni hai?
-            <br>
-            <input type="radio" name="age" value="18-61" required> 18-61 anni
-            <input type="radio" name="age" value="62+" required> 62+ anni
-          </label>
-          <label>Come compili il questionario?<br>
-            <input type="radio" name="mode" value="self" required> Lo leggo da solo/a
-            <input type="radio" name="mode" value="administered" required> Qualcuno me lo legge
-          </label>
-          <label>La tua email per ricevere il risultato
-            <input type="email" name="email" required>
-          </label>
-        </div>
-        <button type="button" class="btn-next">Avanti</button>
+        <p style="margin-bottom:2em">Rispondi alle domande: riceverai il tuo risultato via email alla fine del percorso.</p>
+        <button type="button" class="btn-next">Inizia</button>
       </section>
-      <!-- STEP 2 -->
+      <!-- TAB 2: Età -->
       <section class="step" data-step="2">
-        <h2 class="caveat">Situazione attuale (1/2)</h2>
-        <label>1. Potrei gestire una spesa imprevista importante <br>
-          <input type="radio" name="q1" value="4" required>Completamente
-          <input type="radio" name="q1" value="3" required>Molto bene
-          <input type="radio" name="q1" value="2" required>Abbastanza
-          <input type="radio" name="q1" value="1" required>Poco
-          <input type="radio" name="q1" value="0" required>Per niente
-        </label>
-        <label>2. Sto assicurando il mio futuro finanziario <br>
-          <input type="radio" name="q2" value="4" required>Completamente
-          <input type="radio" name="q2" value="3" required>Molto bene
-          <input type="radio" name="q2" value="2" required>Abbastanza
-          <input type="radio" name="q2" value="1" required>Poco
-          <input type="radio" name="q2" value="0" required>Per niente
-        </label>
-        <label>3. A causa della mia situazione finanziaria, sento che non avrò mai le cose che voglio nella vita <br>
-          <input type="radio" name="q3" value="0" required>Completamente
-          <input type="radio" name="q3" value="1" required>Molto bene
-          <input type="radio" name="q3" value="2" required>Abbastanza
-          <input type="radio" name="q3" value="3" required>Poco
-          <input type="radio" name="q3" value="4" required>Per niente
-        </label>
+        <h2 class="caveat">Chi sei?</h2>
+        <div class="question-row">
+          <div class="q-title">Quanti anni hai?</div>
+          <div class="options-inline">
+            <label><input type="radio" name="age" value="18-61" required>18-61 anni</label>
+            <label><input type="radio" name="age" value="62+" required>62+ anni</label>
+          </div>
+        </div>
         <button type="button" class="btn-prev">Indietro</button>
         <button type="button" class="btn-next">Avanti</button>
       </section>
-      <!-- STEP 3 -->
+      <!-- TAB 3: Modalità -->
       <section class="step" data-step="3">
-        <h2 class="caveat">Situazione attuale (2/2)</h2>
-        <label>4. Posso godermi la vita grazie al modo in cui gestisco i miei soldi <br>
-          <input type="radio" name="q4" value="4" required>Completamente
-          <input type="radio" name="q4" value="3" required>Molto bene
-          <input type="radio" name="q4" value="2" required>Abbastanza
-          <input type="radio" name="q4" value="1" required>Poco
-          <input type="radio" name="q4" value="0" required>Per niente
-        </label>
-        <label>5. Riesco a malapena a sbarcare il lunario finanziariamente <br>
-          <input type="radio" name="q5" value="0" required>Completamente
-          <input type="radio" name="q5" value="1" required>Molto bene
-          <input type="radio" name="q5" value="2" required>Abbastanza
-          <input type="radio" name="q5" value="3" required>Poco
-          <input type="radio" name="q5" value="4" required>Per niente
-        </label>
-        <label>6. Sono preoccupato che i soldi che ho o risparmierò non dureranno <br>
-          <input type="radio" name="q6" value="0" required>Completamente
-          <input type="radio" name="q6" value="1" required>Molto bene
-          <input type="radio" name="q6" value="2" required>Abbastanza
-          <input type="radio" name="q6" value="3" required>Poco
-          <input type="radio" name="q6" value="4" required>Per niente
-        </label>
+        <h2 class="caveat">Modalità compilazione</h2>
+        <div class="question-row">
+          <div class="q-title">Come compili il questionario?</div>
+          <div class="options-inline">
+            <label><input type="radio" name="mode" value="self" required>Lo leggo da solo/a</label>
+            <label><input type="radio" name="mode" value="administered" required>Qualcuno me lo legge</label>
+          </div>
+        </div>
         <button type="button" class="btn-prev">Indietro</button>
         <button type="button" class="btn-next">Avanti</button>
       </section>
-      <!-- STEP 4 -->
+      <!-- TAB 4: Parte 1 (1-3) -->
       <section class="step" data-step="4">
-        <h2 class="caveat">Comportamenti finanziari</h2>
-        <label>7. Fare un regalo per un matrimonio, compleanno o altra occasione metterebbe a dura prova le mie finanze per il mese <br>
-          <input type="radio" name="q7" value="0" required>Sempre
-          <input type="radio" name="q7" value="1" required>Spesso
-          <input type="radio" name="q7" value="2" required>A volte
-          <input type="radio" name="q7" value="3" required>Raramente
-          <input type="radio" name="q7" value="4" required>Mai
-        </label>
-        <label>8. Ho soldi avanzati alla fine del mese <br>
-          <input type="radio" name="q8" value="4" required>Sempre
-          <input type="radio" name="q8" value="3" required>Spesso
-          <input type="radio" name="q8" value="2" required>A volte
-          <input type="radio" name="q8" value="1" required>Raramente
-          <input type="radio" name="q8" value="0" required>Mai
-        </label>
-        <label>9. Sono in ritardo con le mie finanze <br>
-          <input type="radio" name="q9" value="0" required>Sempre
-          <input type="radio" name="q9" value="1" required>Spesso
-          <input type="radio" name="q9" value="2" required>A volte
-          <input type="radio" name="q9" value="3" required>Raramente
-          <input type="radio" name="q9" value="4" required>Mai
-        </label>
-        <label>10. Le mie finanze controllano la mia vita <br>
-          <input type="radio" name="q10" value="0" required>Sempre
-          <input type="radio" name="q10" value="1" required>Spesso
-          <input type="radio" name="q10" value="2" required>A volte
-          <input type="radio" name="q10" value="3" required>Raramente
-          <input type="radio" name="q10" value="4" required>Mai
-        </label>
+        <h2 class="caveat">Situazione attuale (1/2)</h2>
+        <div class="question-row">
+          <div class="q-title">1. Potrei gestire una spesa imprevista importante</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q1" value="4" required>Completamente</label>
+            <label><input type="radio" name="q1" value="3" required>Molto bene</label>
+            <label><input type="radio" name="q1" value="2" required>Abbastanza</label>
+            <label><input type="radio" name="q1" value="1" required>Poco</label>
+            <label><input type="radio" name="q1" value="0" required>Per niente</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <div class="q-title">2. Sto assicurando il mio futuro finanziario</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q2" value="4" required>Completamente</label>
+            <label><input type="radio" name="q2" value="3" required>Molto bene</label>
+            <label><input type="radio" name="q2" value="2" required>Abbastanza</label>
+            <label><input type="radio" name="q2" value="1" required>Poco</label>
+            <label><input type="radio" name="q2" value="0" required>Per niente</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <div class="q-title">3. A causa della mia situazione finanziaria, sento che non avrò mai le cose che voglio nella vita</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q3" value="0" required>Completamente</label>
+            <label><input type="radio" name="q3" value="1" required>Molto bene</label>
+            <label><input type="radio" name="q3" value="2" required>Abbastanza</label>
+            <label><input type="radio" name="q3" value="3" required>Poco</label>
+            <label><input type="radio" name="q3" value="4" required>Per niente</label>
+          </div>
+        </div>
         <button type="button" class="btn-prev">Indietro</button>
         <button type="button" class="btn-next">Avanti</button>
       </section>
-      <!-- STEP 5 -->
+      <!-- TAB 5: Parte 1 (4-6) -->
       <section class="step" data-step="5">
-        <h2 class="caveat">Conferma</h2>
-        <p>Premi "Invia" per ricevere il risultato via email.<br><br>
-        Verifica che le informazioni inserite siano corrette.</p>
+        <h2 class="caveat">Situazione attuale (2/2)</h2>
+        <div class="question-row">
+          <div class="q-title">4. Posso godermi la vita grazie al modo in cui gestisco i miei soldi</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q4" value="4" required>Completamente</label>
+            <label><input type="radio" name="q4" value="3" required>Molto bene</label>
+            <label><input type="radio" name="q4" value="2" required>Abbastanza</label>
+            <label><input type="radio" name="q4" value="1" required>Poco</label>
+            <label><input type="radio" name="q4" value="0" required>Per niente</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <div class="q-title">5. Riesco a malapena a sbarcare il lunario finanziariamente</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q5" value="0" required>Completamente</label>
+            <label><input type="radio" name="q5" value="1" required>Molto bene</label>
+            <label><input type="radio" name="q5" value="2" required>Abbastanza</label>
+            <label><input type="radio" name="q5" value="3" required>Poco</label>
+            <label><input type="radio" name="q5" value="4" required>Per niente</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <div class="q-title">6. Sono preoccupato che i soldi che ho o risparmierò non dureranno</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q6" value="0" required>Completamente</label>
+            <label><input type="radio" name="q6" value="1" required>Molto bene</label>
+            <label><input type="radio" name="q6" value="2" required>Abbastanza</label>
+            <label><input type="radio" name="q6" value="3" required>Poco</label>
+            <label><input type="radio" name="q6" value="4" required>Per niente</label>
+          </div>
+        </div>
+        <button type="button" class="btn-prev">Indietro</button>
+        <button type="button" class="btn-next">Avanti</button>
+      </section>
+      <!-- TAB 6: Parte 2 (7-10) -->
+      <section class="step" data-step="6">
+        <h2 class="caveat">Comportamenti finanziari</h2>
+        <div class="question-row">
+          <div class="q-title">7. Fare un regalo per un matrimonio, compleanno o altra occasione metterebbe a dura prova le mie finanze per il mese</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q7" value="0" required>Sempre</label>
+            <label><input type="radio" name="q7" value="1" required>Spesso</label>
+            <label><input type="radio" name="q7" value="2" required>A volte</label>
+            <label><input type="radio" name="q7" value="3" required>Raramente</label>
+            <label><input type="radio" name="q7" value="4" required>Mai</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <div class="q-title">8. Ho soldi avanzati alla fine del mese</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q8" value="4" required>Sempre</label>
+            <label><input type="radio" name="q8" value="3" required>Spesso</label>
+            <label><input type="radio" name="q8" value="2" required>A volte</label>
+            <label><input type="radio" name="q8" value="1" required>Raramente</label>
+            <label><input type="radio" name="q8" value="0" required>Mai</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <div class="q-title">9. Sono in ritardo con le mie finanze</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q9" value="0" required>Sempre</label>
+            <label><input type="radio" name="q9" value="1" required>Spesso</label>
+            <label><input type="radio" name="q9" value="2" required>A volte</label>
+            <label><input type="radio" name="q9" value="3" required>Raramente</label>
+            <label><input type="radio" name="q9" value="4" required>Mai</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <div class="q-title">10. Le mie finanze controllano la mia vita</div>
+          <div class="options-inline">
+            <label><input type="radio" name="q10" value="0" required>Sempre</label>
+            <label><input type="radio" name="q10" value="1" required>Spesso</label>
+            <label><input type="radio" name="q10" value="2" required>A volte</label>
+            <label><input type="radio" name="q10" value="3" required>Raramente</label>
+            <label><input type="radio" name="q10" value="4" required>Mai</label>
+          </div>
+        </div>
+        <button type="button" class="btn-prev">Indietro</button>
+        <button type="button" class="btn-next">Avanti</button>
+      </section>
+      <!-- TAB 7: Email e conferma -->
+      <section class="step" data-step="7">
+        <h2 class="caveat">Conferma e invia</h2>
+        <label for="cfpbemail">Inserisci la tua email per ricevere il risultato:</label>
+        <input type="email" name="email" id="cfpbemail" required placeholder="email@dominio.it" autocomplete="off">
+        <p style="font-size:0.92em;color:#888;margin:1em 0 2em 0;">Premi "Invia" per ricevere il risultato nella tua casella di posta.</p>
         <button type="button" class="btn-prev">Indietro</button>
         <button type="submit" class="btn-hubspot">Invia</button>
       </section>
@@ -241,10 +309,9 @@ let currentStep = 0;
 const progressBar = document.getElementById('progress-bar');
 function showStep(idx) {
   steps.forEach((step, i) => step.classList.toggle('active', i === idx));
-  // Progress bar
   if (progressBar) {
     const pct = ((idx+1)/steps.length) * 100;
-    progressBar.innerHTML = '<span style="width: '+pct+'%;"></span>';
+    progressBar.innerHTML = '<span style="width:'+pct+'%;"></span>';
   }
 }
 nextBtns.forEach(btn => btn.addEventListener('click', () => {
@@ -254,34 +321,28 @@ prevBtns.forEach(btn => btn.addEventListener('click', () => {
   if(currentStep > 0){ currentStep--; showStep(currentStep);}
 }));
 showStep(0);
-// -- validazione minimale
+// validazione: almeno un'opzione selezionata o email
 function validateStep(idx){
-  const section = steps[idx];
-  const required = section.querySelectorAll('input[required], select[required]');
+  const section = steps[idx], required = section.querySelectorAll('input[required]');
   for (let inp of required) {
-    if((inp.type==='email' || inp.type==='text') && !inp.value) return false;
-    if((inp.type==='radio' || inp.type==='checkbox') && !section.querySelector(inp.tagName+'[name="'+inp.name+'"]:checked')) return false;
+    if(inp.type==='email' && !inp.value) return false;
+    if(inp.type==='radio' && !section.querySelector('input[name="'+inp.name+'"]:checked')) return false;
   }
   return true;
 }
-// --- conversion table
+// conversion table
 const conversion = {
-  "18-61_self": [14,19,22,25,27,29,31,32,34,35,37,38,40,41,42,44,45,46,47,49,50,51,52,54,55,56,58,59,60,62,63,65,66,68,69,71,73,75,78,81,86],
-  "18-61_administered": [16,21,24,27,29,31,33,34,36,38,39,40,42,43,44,45,47,48,49,50,52,53,54,55,57,58,59,60,62,63,65,66,68,70,71,73,76,78,81,85,91],
-  "62+_self": [18,23,26,28,30,32,33,35,36,38,39,41,42,44,45,46,48,49,50,52,53,54,56,57,58,60,61,63,64,66,67,69,71,73,75,77,79,82,84,88,95],
-  "62+_administered": [18,23,26,28,30,32,33,35,36,38,40,41,43,44,45,46,47,48,49,50,52,53,54,55,56,57,58,60,61,62,64,65,67,68,70,72,75,77,81,87,87]
+  "18-61_self":[14,19,22,25,27,29,31,32,34,35,37,38,40,41,42,44,45,46,47,49,50,51,52,54,55,56,58,59,60,62,63,65,66,68,69,71,73,75,78,81,86],
+  "18-61_administered":[16,21,24,27,29,31,33,34,36,38,39,40,42,43,44,45,47,48,49,50,52,53,54,55,57,58,59,60,62,63,65,66,68,70,71,73,76,78,81,85,91],
+  "62+_self":[18,23,26,28,30,32,33,35,36,38,39,41,42,44,45,46,48,49,50,52,53,54,56,57,58,60,61,63,64,66,67,69,71,73,75,77,79,82,84,88,95],
+  "62+_administered":[18,23,26,28,30,32,33,35,36,38,40,41,43,44,45,46,47,48,49,50,52,53,54,55,56,57,58,60,61,62,64,65,67,68,70,72,75,77,81,87,87]
 };
-function getKey(age, mode) { return age+'_'+mode; }
-// Punteggi/Range: Serve solo lato invio
-const scoreLevels = [
-  {min:0, max:29, level:"Molto Basso"},
-  {min:30, max:37, level:"Basso"},
-  {min:38, max:49, level:"Medio-Basso"},
-  {min:50, max:57, level:"Medio-Alto"},
-  {min:58, max:67, level:"Alto"},
-  {min:68, max:100, level:"Molto Alto"}
+function getKey(age,mode){return age+'_'+mode;}
+const scoreLevels=[
+  {min:0,max:29,level:"Molto Basso"},{min:30,max:37,level:"Basso"},
+  {min:38,max:49,level:"Medio-Basso"},{min:50,max:57,level:"Medio-Alto"},
+  {min:58,max:67,level:"Alto"},{min:68,max:100,level:"Molto Alto"}
 ];
-// -- submit & calcolo
 document.getElementById('wellbeingForm').onsubmit = async function(ev) {
   ev.preventDefault();
   const data = new FormData(ev.target);
@@ -290,10 +351,8 @@ document.getElementById('wellbeingForm').onsubmit = async function(ev) {
   for(let i=1;i<=10;i++) totalValue += parseInt(data.get('q'+i));
   let key = getKey(age,mode);
   let finalScore = (typeof conversion[key][totalValue]!=='undefined') ? conversion[key][totalValue] : 'ND';
-  // Trova livello raggiunto
   let livello = '';
   for(let l of scoreLevels) {if(finalScore >= l.min && finalScore <= l.max) livello = l.level;}
-  // Prepara payload per HubSpot
   const hubspotPayload = {
     fields: [
       { name: "email", value: data.get('email') },
