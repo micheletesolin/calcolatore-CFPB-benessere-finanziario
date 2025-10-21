@@ -387,5 +387,25 @@ document.getElementById('wellbeingForm').onsubmit=async function(e){
 };
 function getCookie(n){let v="; "+document.cookie;let p=v.split("; "+n+"=");if(p.length===2)return p.pop().split(";").shift();}
 </script>
+  <script>
+  // Funzione per inviare l'altezza al parent
+  function sendHeight() {
+    const height = document.documentElement.scrollHeight;
+    window.parent.postMessage({
+      type: "resize-iframe",
+      height: height
+    }, "*");
+  }
+
+  // Invia l'altezza al caricamento
+  window.addEventListener("load", sendHeight);
+
+  // Invia l'altezza quando il contenuto cambia
+  const resizeObserver = new ResizeObserver(sendHeight);
+  resizeObserver.observe(document.body);
+
+  // Fallback per cambiamenti dinamici
+  setInterval(sendHeight, 1000);
+</script>
 </body>
 </html>
