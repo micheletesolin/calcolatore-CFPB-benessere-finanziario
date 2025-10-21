@@ -388,5 +388,18 @@ document.getElementById('wellbeingForm').onsubmit=async function(e){
 };
 function getCookie(n){let v="; "+document.cookie;let p=v.split("; "+n+"=");if(p.length===2)return p.pop().split(";").shift();}
 </script>
+  <script>
+  function sendHeight() {
+    const height = document.documentElement.scrollHeight;
+    window.parent.postMessage({
+      type: "resize-iframe",
+      height: height
+    }, "*");
+  }
+  window.addEventListener("load", sendHeight);
+  const resizeObserver = new ResizeObserver(sendHeight);
+  resizeObserver.observe(document.body);
+  setInterval(sendHeight, 1000);
+</script>
 </body>
 </html>
