@@ -376,7 +376,7 @@ document.getElementById('wellbeingForm').onsubmit=async function(e){
       pageName:document.title
     }
   };
-  const URL='https://api.hsforms.com/submissions/v3/integration/secure/submit/139488471/e463c027-40fd-4404-ac6e-51a4bc10c927';
+  const URL='https://api.hsforms.com/submissions/v3/integration/secure/submit/139488471/e463c027-40fd-4404-ac6e-51a4bc10c927?region=eu1';
   await fetch(URL,{
     method:'POST',
     headers:{"Content-Type":"application/json"},
