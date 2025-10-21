@@ -130,7 +130,8 @@ input:focus { border: 1.8px solid var(--brand-primary); }
  <form id="wellbeingForm" autocomplete="off">
    <!-- Tab 1: Intro -->
    <section class="step active" data-step="1">
-     <h1>Calcolatore Benessere Finanziario CFPB<span style="color:#1CAFB9;">.</span></h1>
+     <h1>Calcolatore<span style="color:#1CAFB9;">.</span></h1>
+     <h2 class="caveat">Benessere Finanziario CFPB</h2>
      <p>Rispondi alle domande: riceverai il risultato via email al termine.</p>
      <button type="button" class="btn-next">Inizia</button>
    </section>
@@ -376,7 +377,7 @@ document.getElementById('wellbeingForm').onsubmit=async function(e){
       pageName:document.title
     }
   };
-  const URL='https://api.hsforms.com/submissions/v3/integration/secure/submit/139488471/e463c027-40fd-4404-ac6e-51a4bc10c927';
+  const URL='https://api.hsforms.com/submissions/v3/integration/submit/139488471/e463c027-40fd-4404-ac6e-51a4bc10c927';
   await fetch(URL,{
     method:'POST',
     headers:{"Content-Type":"application/json"},
@@ -386,26 +387,6 @@ document.getElementById('wellbeingForm').onsubmit=async function(e){
   document.getElementById('thankyou').style.display='block';
 };
 function getCookie(n){let v="; "+document.cookie;let p=v.split("; "+n+"=");if(p.length===2)return p.pop().split(";").shift();}
-</script>
-  <script>
-  // Funzione per inviare l'altezza al parent
-  function sendHeight() {
-    const height = document.documentElement.scrollHeight;
-    window.parent.postMessage({
-      type: "resize-iframe",
-      height: height
-    }, "*");
-  }
-
-  // Invia l'altezza al caricamento
-  window.addEventListener("load", sendHeight);
-
-  // Invia l'altezza quando il contenuto cambia
-  const resizeObserver = new ResizeObserver(sendHeight);
-  resizeObserver.observe(document.body);
-
-  // Fallback per cambiamenti dinamici
-  setInterval(sendHeight, 1000);
 </script>
 </body>
 </html>
