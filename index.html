@@ -283,11 +283,11 @@ input:focus { border: 1.8px solid var(--brand-primary); }
    <section class="step" data-step="7">
      <h2 class="caveat">Conferma e dati personali</h2>
      <label for="cfp_email">Inserisci la tua email:</label>
-     <input type="email" id="cfp_email" name="email" placeholder="email@dominio.it" required autocomplete="off"/>
+     <input type="email" id="cfp_email" name="email" placeholder="email@dominio.it" required autocomplete="off" />
      <label for="cfp_firstname">Nome:</label>
-     <input type="text" id="cfp_firstname" name="firstname" placeholder="Nome" required autocomplete="off"/>
+     <input type="text" id="cfp_firstname" name="firstname" placeholder="Nome" required autocomplete="off" />
      <label for="cfp_lastname">Cognome:</label>
-     <input type="text" id="cfp_lastname" name="lastname" placeholder="Cognome" required autocomplete="off"/>
+     <input type="text" id="cfp_lastname" name="lastname" placeholder="Cognome" required autocomplete="off" />
      <p>Premi "Invia" per ricevere il risultato via email.</p>
      <button type="button" class="btn-prev">Indietro</button>
      <button type="submit" class="btn-hubspot">Invia</button>
@@ -347,23 +347,18 @@ document.getElementById('wellbeingForm').onsubmit=async function(e){
   const scoreArr=conversion[key];
   const final_score=scoreArr[total];
   let livello="";
-  for(let l of scoreLevels){
-    if(final_score>=l.min && final_score<=l.max) livello=l.level;
-  }
+  for(let l of scoreLevels){if(final_score>=l.min && final_score<=l.max) livello=l.level;}
   const descrizioni=[
-    {min:0,max:29,msg:"Le persone in questo range tendono a sperimentare difficoltà finanziarie significative, con problemi a coprire spese impreviste e forte stress."},
-    {min:30,max:37,msg:"Hanno ancora difficoltà nella gestione quotidiana delle spese e possono sentirsi vulnerabili."},
-    {min:38,max:49,msg:"Gestiscono parzialmente le finanze, con bisogno di rafforzare riserve e sicurezza."},
-    {min:50,max:57,msg:"Gestiscono bene le finanze, con margini di miglioramento."},
-    {min:58,max:67,msg:"Solida stabilità e gestione ottimale."},
-    {min:68,max:100,msg:"Eccellente benessere, sicurezza totale."}
+    {min:0,max:29,msg:"[translate]Attualmente potresti incontrare molte difficoltà nella gestione delle tue finanze. Spese improvvise potrebbero metterti in difficoltà e potresti sentirti stressato dal controllo del denaro. Non preoccuparti, questa è l'occasione giusta per imparare a pianificare e prendere piccoli passi verso una maggiore sicurezza.[/translate]"},
+    {min:30,max:37,msg:"[translate]Gestire le finanze quotidiane può essere ancora impegnativo e potresti sentirti vulnerabile di fronte agli imprevisti. Il primo passo per migliorare è fare un bilancio delle tue entrate e uscite e iniziare a costruire un piccolo fondo di emergenza.[/translate]"},
+    {min:38,max:49,msg:"[translate]Sei sulla strada giusta, ma potrebbe essere utile rafforzare le tue riserve economiche e pianificare meglio le spese future. Rafforzare la sicurezza delle tue finanze ti aiuterà a sentirti più tranquillo e a prepararti per eventuali imprevisti.[/translate]"},
+    {min:50,max:57,msg:"[translate]Gestisci le finanze quotidiane con discreta organizzazione e controllo. Potresti però migliorare pianificando con più attenzione obiettivi a lungo termine e risparmiando regolarmente per maggior sicurezza.[/translate]"},
+    {min:58,max:67,msg:"[translate]Hai una solida gestione delle tue finanze e sai affrontare con sicurezza le spese impreviste. Continua così, mantenendo una buona disciplina di spesa e pianificando progetti futuri per consolidare ancora di più il tuo benessere economico.[/translate]"},
+    {min:68,max:100,msg:"[translate]Sei un esempio di eccellenza nella gestione finanziaria: hai sicurezza, controllo e una chiara visione dei tuoi obiettivi. Goditi la tranquillità che hai costruito e continua a fare scelte consapevoli per mantenere il tuo benessere nel tempo.[/translate]"}
   ];
   let descrizione="";
-  for(let d of descrizioni){ 
-    if(final_score>=d.min && final_score<=d.max){descrizione=d.msg; break;}
-  }
+  for(let d of descrizioni){if(final_score>=d.min && final_score<=d.max){descrizione=d.msg;break;}}
   
-  // invio dati a HubSpot
   const payload={
     fields:[
       {name:"email",value:data.get('email')},
@@ -376,29 +371,22 @@ document.getElementById('wellbeingForm').onsubmit=async function(e){
       {name:"cfpb_ranking",value:livello},
       {name:"cfpb_ranking_description",value:descrizione}
     ],
-    context: {
-      hutk: getCookie('hubspotutk'),
-      pageUri: window.location.href,
-      pageName: document.title
+    context:{
+      hutk:getCookie('hubspotutk'),
+      pageUri:window.location.href,
+      pageName:document.title
     }
   };
-  // URL completo con tuo PORTAL_ID e FORM_ID
   const URL='https://api.hsforms.com/submissions/v3/integration/submit/139488471/e463c027-40fd-4404-ac6e-51a4bc10c927';
-
   await fetch(URL,{
     method:'POST',
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   });
-  // Mostra messaggio finale e nasconde form
   document.querySelector('.step.active').style.display='none';
   document.getElementById('thankyou').style.display='block';
 };
-function getCookie(name){ 
-  let v="; "+document.cookie; 
-  let p=v.split("; "+name+"="); 
-  if(p.length===2) return p.pop().split(";").shift();
-}
+function getCookie(n){let v="; "+document.cookie;let p=v.split("; "+n+"=");if(p.length===2)return p.pop().split(";").shift();}
 </script>
 </body>
 </html>
